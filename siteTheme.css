@@ -1,0 +1,73 @@
+body {
+	font-family: Arial, Verdana, sans-serif;
+	font-style: normal;
+    background-image: url("texture.jpg");
+    background-
+}
+header, div,  {
+	border-color: darkslateblue;
+	border-style: solid;
+}
+
+#price {
+    background-color: black;
+
+}
+#breadcrumb{
+    posiri
+}
+
+#theSubmit {
+	background-color: white;
+	color: black;
+    font-family: sans-serif
+}
+.menuItem, .subMenu {
+	background-color: cadetblue;
+	color: white; 
+    boder-style: solid;
+    border-width: 1px;
+    border-color: black;
+}
+
+#spec {
+list-style-type: none;
+}
+
+.navmenuItem {
+	background-color: cadetblue;
+	border-color: cadetblue;
+	border-style: solid;
+    width: 656px;
+}
+
+.anchorMenuItem {
+	background-color: cadetblue;
+	color: white;
+}
+.anchorMenuItem {
+    text-decoration: none;
+}
+.chosenItem {
+	background-color: cadetblue;
+}
+h1, footer p {
+	color: white;
+    font-family: "Oswald";
+    font-size: 50px;
+    position:absolute;
+    left: 450px;
+}
+
+.titleStart, .priceStart {
+	border-color: none;
+	background-color: Black;
+	color: white;
+    border: 3px;
+    border-color: silver;
+    border-style: solid;  
+	opacity: 1;
+}
+
+
+

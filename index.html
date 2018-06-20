@@ -1,0 +1,50 @@
+<!DOCTYPE html> 
+<html>
+	   <head>
+        <!--Sets unicode standard-->
+		<meta charset="UTF-8" /> 
+		<title>Camera Shop</title>
+        <!--Links in css styles and google fonts-->
+		<link rel="stylesheet" href="siteLayout.css" type="text/css" media="screen,projection" />
+		<link rel="stylesheet" href="siteTheme.css" type="text/css" media="screen,projection" />
+        <link href='https://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>
+		<style>
+        /* For styling specific to this page */
+        #mainBody {
+        min-height: 615px;
+		</style>
+           
+        <!--Run The Jquery-->
+		<script src="jquery-2.2.0.min.js"></script>
+		<script src='CameraShop.js'></script>
+		<script>
+        preloadCarouselImages();
+		
+        // Load the document and make function
+        $(document).ready(function() { 
+				
+            // Populate the navigation bar
+            populateNav("navmenu");
+            startCarousel("mainBody");
+				
+});
+	     	</script>         <!--Close Script tag-->
+	        </head>
+	        <body>
+		    <header>
+			<img src="logo.jpg" alt="Camera Shop Logo"  height="42" width="42"> />
+			<h1>CameraShop.com</h1>
+            <!--called the jquery and run scripts-->
+			<div id="searchBar"><form action="results.html">
+            <input type="text" name='searchTerm' id="searchTerm" max-length="15"><input type="submit" id="theSubmit" value="Submit">
+			</form></div>
+		    </header>
+            <ul class="navmenu">
+		    </ul>
+		    <div id="mainBody">
+		    </div>
+       <footer>
+       <p>&copy Camera Shop 2016</p>
+       </footer>
+	   </body>
+</html>

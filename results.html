@@ -1,0 +1,311 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<!-- This is a comment tag -->
+		<meta charset="UTF-8" />
+		<title>CameraShop.com</title>
+		<link rel="stylesheet" href="siteLayout.css" type="text/css" media="screen,projection" />
+		<link rel="stylesheet" href="siteTheme.css" type="text/css" media="screen,projection" />
+        <link href='https://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>
+        
+		<style>
+			#mainBody {
+				min-height: 615px;
+			}
+			table img{
+				height: 50px;
+                left: 400px; 
+			}
+			.rowOdd {
+				border-width: 10px;
+                border-style: solid;
+				background-color: cadetblue;
+                font-family: sans-serif;
+			}
+			.rowEven{
+				background-color: lightblue;
+                font-family: sans-serif;
+			}
+                        #title {
+                font-family: 'Oswald';
+		</style>
+        
+		<script src="jquery-2.2.0.min.js"></script>
+		<script src='CameraShop.js'></script>
+		<script>
+                            // Make results array global
+		var results;
+		var brandOrder = 0; // Set to neutral ordering
+		var priceOrder = 0; // Set to neutral ordering
+		
+		// 2. Define search engine filter
+		function searchEngine(searchTerm)
+		{
+			// Reset result list
+        results = [ ];
+
+        var resultsIndex = 1;  // Data Index
+        var resIndex = 0; // results array index
+			
+        // For all products in the data
+        $products.find('product').each(function(){
+			
+        // Process a 'product'...get the data
+        var theData = $(this).find('title').text()  + " " + $(this).find('description').text();
+        theData = theData + " " + $(this).find('brand').text() + " " + $(this).find('price').text()+ " " + $(this).find('spec').text();
+				
+        // Check if search term is in the data, ignoring case	
+        if (theData.toUpperCase().indexOf( searchTerm.toUpperCase() ) > -1)
+				{
+        // Search term found, save results index
+		results[resIndex] = resultsIndex;
+		resIndex++;
+				}
+				
+	   // Move data index on one
+            resultsIndex++;
+			});
+			
+			paintResults();
+		}
+
+		// 4. Sort the results
+		function sortResults(colName)
+		{
+			var tmp;
+			var swap;
+			var order;
+			
+			// Check if we have enough results to sort
+			if (results.length > 1)
+			{
+				// Work out the ordering: ascending (1) or descending (-1) 
+				if (colName == 'brand')
+				{
+					// Check 'brand column
+					if (brandOrder != 1)
+					{
+						brandOrder = 1;
+						order = 1;
+					}
+					else
+					{
+						brandOrder = -1;
+						order = -1;
+					}
+					priceOrder = 0;
+				}
+				else
+				{
+					//check 'price' column
+					if (priceOrder != 1)
+					{
+						priceOrder = 1;
+						order = 1;
+					}
+					else
+					{
+						priceOrder = -1;
+						order = -1;
+					}
+					brandOrder = 0;
+				}
+				
+				// alert(order + ":" + results.length);
+			
+				for (var i=0; i <= (results.length - 2); i++)
+				{
+					for (var j=i+1; j <= (results.length - 1); j++)
+					{
+						// Get the data
+						$row1 = $products.find('product').filter(":nth-child("+ results[i] + ")");
+						$row2 = $products.find('product').filter(":nth-child("+ results[j] + ")");
+						var firstData = $row1.find(colName).text();
+						var secondData = $row2.find(colName).text();
+						
+						// Put data in correct types for comparison
+						if (colName == 'brand')
+						{
+							firstData = firstData.toUpperCase();
+							secondData = secondData.toUpperCase();
+						}
+						else
+						{
+							firstData = parseFloat(firstData.replace(',', ''));
+							secondData = parseFloat(secondData.replace(',', ''));
+						}
+						
+						swap = 0; // Assume no swap is needed
+
+						if (order == 1)
+						{
+							// Ascending
+							if (firstData > secondData)
+							{
+								swap = 1;
+							}
+						}
+						else
+						{
+							// Descending
+							if (firstData < secondData)
+							{
+								swap = 1;
+							}
+						}
+						
+						// alert(i + ":" + j + ":" + order + ":" + firstData + ":" + secondData + ":" + swap)
+						
+						if (swap == 1)
+						{
+							//Do the swap
+							tmp = results[i];
+							results[i] = results[j];
+							results[j] = tmp;
+						}
+					}
+				}
+				paintResults();
+			}
+		}
+		
+		          // 3. Display the results
+		          function paintResults()
+		          {
+                      
+			     // delete the searchResults table children
+			     $('#searchResults').empty();
+		
+			     // Check if we have any results
+			     if (results.length > 0)
+			     {
+                     
+				// Build header row
+				$('#searchResults').html("<thead><tr class='row'><th>Item</th><th>Description</th>" +
+				"<th><a href='#' id='sortManu'>Brand</a>" +
+				"</th><th><a href='#' id='sortPrice'>Price</a>" +
+				"</th><th></th></thead><tbody></tbody>");
+				
+				// For each of the search results
+				for(var childNum in results)
+				{
+                    
+				// get the xml specific child product
+				$row = $products.find('product').filter(":nth-child("+ results[childNum] + ")");
+					
+				// output a row in the table
+				var id = $row.find('id').text();
+				var title = $row.find('title').text();
+				var brand = $row.find('brand').text();
+				var price = $row.find('price').text();
+				var picture = $row.find('picture').text();
+				$('#searchResults > tbody').append("<tr class='row'><td class='id'>" + id +
+				"</td><td>" + title + "</td><td>" + brand +
+				"</td><td>&pound;" + price + 
+				"</td><td><img src='ProductImages/"+picture+"' /></td></tr>");
+				}
+				
+				// Apply styling
+				$('#searchResults > thead > tr').addClass( "tableHeader" );
+				
+				$('#searchResults > tbody > tr > td > img').addClass( "tableImg" );
+				
+				$('#searchResults > tbody')
+				.find( "tr:odd" ).addClass( "rowOdd" )
+				.end() // break chain and return to the original tbody element
+				.find( "tr:even" ).addClass( "rowEven" );
+				
+				// Setup sorting listeners
+				$('#sortManu').on('click', function(e){
+					e.preventDefault();
+					sortResults('brand');
+				});
+				
+				$('#sortPrice').on('click', function(e){
+					e.preventDefault();
+					sortResults('price');
+				});
+				
+				$('.row').on('click', function(){
+					var id = $(this).find('td[class="id"]').text();
+					console.log(id);
+					window.location.href = "product.html?id="+id;
+				
+				});
+				
+			}
+			else
+			{
+				// No results
+				$('#searchResults').html("<p>No results</p>");
+			}
+		}
+		
+			$(document).ready(function() {
+				
+				// Populate the nav bar
+				populateNav("navmenu");
+				
+				// Check if page called from a product page and add anchor to breadcrumb
+				var vars = [], hash;
+				var q = document.URL.split('?')[1];
+				
+				if (q != undefined)
+				{
+					q = q.split('&');
+					for (var i = 0; i < q.length; i++)
+					{
+						hash = q[i].split('=');
+						vars.push(hash[1]);
+						vars[hash[0]] = hash[1];
+					}
+				}
+				
+				if (vars["id"] != undefined)
+				{
+					$('#breadCrumb').append(' - <a href="product.html?id=' + vars['id'] + '">Return to product page</a>');
+				}
+				
+				if (vars["searchTerm"] != undefined)
+				{
+					// There is a search term
+					$('#searchTerm').val(vars['searchTerm']);
+					
+					// Add you table population code here
+					searchEngine(vars["searchTerm"]);
+					paintResults();
+				}
+				else
+				{
+				
+				}
+			});
+		</script>
+	    </head>
+	           <body>
+               <header>
+			   <img src="logo.jpg" alt="Camera Shop Logo" />
+               <h1>CameraShop.com</h1>
+			   <div id="searchBar"><form action="results.html">
+               Search: <input type="text" name="searchTerm" id="searchTerm" max-length="15"><input type="submit" id="theSubmit" value="Submit">
+    </form></div>
+			 <div id="breadCrumb"><a href="index.html"><img src="home.jpg" alt="The home button" /></a></div>
+		      </header>
+		      <ul class="navmenu">
+		      </ul>
+                   
+                   
+            <div id="mainBody">
+			<table id='searchResults'>
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+			</table>
+		    </div>
+                   
+		<footer>
+			<p>&copy Camera Shop 2016</p>
+		</footer>
+	</body>
+</html>
